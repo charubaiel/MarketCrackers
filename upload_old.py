@@ -86,14 +86,14 @@ if __name__=='__main__':
                 upload_du(pd.DataFrame(tmp_list).query('e=="depthUpdate"').dropna(axis=1))
                 upload_trade(pd.DataFrame(tmp_list).query('e!="depthUpdate"').dropna(axis=1))
                 
-                logging.info('du_data :',query('''select 
+                logging.info('du_data :'+query('''select 
                         max(toDateTime64(event_time/1000,1)) as max,
                         count() as events,
                         uniq(event_time) as uniq
                         from crypto.du_data
                         ''').text)
                         
-                logging.info('trade_data :',query('''select 
+                logging.info('trade_data :'+query('''select 
                         max(toDateTime64(event_time/1000,1)) as max,
                         count() as events,
                         uniq(event_time) as uniq
