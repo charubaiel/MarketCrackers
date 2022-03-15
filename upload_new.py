@@ -9,7 +9,7 @@ import clickhouse_driver
 from clickhouse_driver import Client
 
 
-client = Client('85.193.83.20', user = 'crypto_etl', password = '0987654321',
+client = Client('85.193.83.20', user = os.getenv('CRYPTO_ETL_USER'), password = os.getenv('CRYPTO_ETL_PASSWORD'),
                 settings = {'use_numpy': True})
 
 parser = argparse.ArgumentParser()
@@ -143,14 +143,14 @@ if __name__=='__main__':
                 upload_du(pd.DataFrame(tmp_list).query('e=="depthUpdate"').dropna(axis=1))
                 upload_trade(pd.DataFrame(tmp_list).query('e!="depthUpdate"').dropna(axis=1))
                 
-                logging.info('du_data :',query('''select 
+                logging.info('du_data :'+query('''select 
                         max(toDateTime64(event_time/1000,1)) as max,
                         count() as events,
                         uniq(event_time) as uniq
                         from crypto.binancews_du
                         ''').text)
                         
-                logging.info('trade_data :',query('''select 
+                logging.info('trade_data :'+query('''select 
                         max(toDateTime64(event_time/1000,1)) as max,
                         count() as events,
                         uniq(event_time) as uniq
